@@ -24,7 +24,7 @@ export const login = async (req, res) => {
 
     // Create an access token
     const accessToken = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: " 5m",
+      expiresIn: "5m",
     });
 
     // Create a refresh toke
@@ -59,6 +59,7 @@ export const login = async (req, res) => {
       },
     });
   } catch (error) {
+    console.log(error);
     res.status(500).json({
       message: "Internal server error",
     });

@@ -1,8 +1,8 @@
 
 
 export const logout = (req, res) => {
-    res.clearcookie("accessToken");
-    res.clearcookie("refreshToken");
+    res.clearCookie("accessToken");
+    res.clearCookie("refreshToken");
 
     res.json({
         message: "Logged out"
