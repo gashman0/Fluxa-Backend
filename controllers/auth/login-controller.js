@@ -3,6 +3,8 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
 export const login = async (req, res) => {
+  const isProduction = process.env.NODE_ENV === "production";
+
   try {
     const { email, password } = req.body;
 
@@ -37,15 +39,15 @@ export const login = async (req, res) => {
     // Store the tokens in http-only cookie
     res.cookie("accessToken", accessToken, {
       httpOnly: true,
-      secure: true,
-      sameSite: "Strict",
+      secure: isProduction,
+      sameSite: isProduction ? "none" : "lax",
       maxAge: 1000 * 60 * 30, // 15mins
     });
 
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
-      secure: true,
-      sameSite: "Strict",
+      secure: isProduction,
+      sameSite: isProduction ? "none" : "lax",
       maxAge: 100 * 60 * 60 * 24 * 1, // 1day
     });
 
