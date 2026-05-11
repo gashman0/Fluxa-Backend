@@ -1,10 +1,21 @@
 
 
 export const logout = (req, res) => {
-    res.clearCookie("accessToken");
-    res.clearCookie("refreshToken");
+  const isProduction = process.env.NODE_ENV === "production";
 
-    res.json({
-        message: "Logged out"
-    });
+  res.clearCookie("accessToken", {
+    httpOnly: true,
+    secure: isProduction,
+    sameSite: isProduction ? "none" : "lax",
+  });
+
+  res.clearCookie("refreshToken", {
+    httpOnly: true,
+    secure: isProduction,
+    sameSite: isProduction ? "none" : "lax",
+  });
+
+  res.json({
+    message: "Logged out",
+  });
 };

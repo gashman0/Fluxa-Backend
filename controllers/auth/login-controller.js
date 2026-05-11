@@ -48,7 +48,7 @@ export const login = async (req, res) => {
       httpOnly: true,
       secure: isProduction,
       sameSite: isProduction ? "none" : "lax",
-      maxAge: 100 * 60 * 60 * 24 * 1, // 1day
+      maxAge: 1000 * 60 * 60 * 24 * 1, // 1day
     });
 
     // Send response to the user
