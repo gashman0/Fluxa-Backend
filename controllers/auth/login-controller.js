@@ -5,6 +5,11 @@ import jwt from "jsonwebtoken";
 export const login = async (req, res) => {
   const isProduction = process.env.NODE_ENV === "production";
 
+  console.log(isProduction ? "production" : "dev");
+
+  console.log("NODE_ENV:", process.env.NODE_ENV);
+  console.log("isProduction:", isProduction);
+
   try {
     const { email, password } = req.body;
 
