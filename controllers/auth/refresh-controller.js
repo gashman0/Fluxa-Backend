@@ -8,7 +8,7 @@ export const refresh = (req, res) => {
             message: "No refresh token"
         })
     }
-
+    console.log("This is the cookie from refresh", req.cookies);
     try {
         const decoded = jwt.verify(refreshToken, process.env.REFRESH_SECRET);
 
