@@ -24,7 +24,7 @@ export const login = async (req, res) => {
 
     // Create an access token
     const accessToken = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "5m",
+      expiresIn: "30m",
     });
 
     // Create a refresh toke
@@ -39,7 +39,7 @@ export const login = async (req, res) => {
       httpOnly: true,
       secure: true,
       sameSite: "Strict",
-      maxAge: 1000 * 60 * 5, // 15mins
+      maxAge: 1000 * 60 * 30, // 15mins
     });
 
     res.cookie("refreshToken", refreshToken, {
