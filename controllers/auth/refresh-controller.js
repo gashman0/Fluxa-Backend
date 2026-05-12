@@ -4,6 +4,8 @@ export const refresh = (req, res) => {
   const isProduction = process.env.NODE_ENV === "production";
   const refreshToken = req.cookies.refreshToken;
 
+  console.log("Refresh endpoint hit");
+
   if (!refreshToken) {
     return res.status(401).json({
       message: "No refresh token",
@@ -16,7 +18,7 @@ export const refresh = (req, res) => {
     const newAccessToken = jwt.sign(
       { id: decoded.id },
       process.env.JWT_SECRET,
-      { expiresIn: "15m" },
+      { expiresIn: "30m" },
     );
 
     res.cookie("accessToken", newAccessToken, {
@@ -24,7 +26,7 @@ export const refresh = (req, res) => {
       secure: isProduction,
       sameSite: isProduction ? "none" : "lax",
       path: "/",
-      maxAge: 1000 * 60 * 15,
+      maxAge: 1000 * 60 * 30,
     });
 
     res.status(200).json({
