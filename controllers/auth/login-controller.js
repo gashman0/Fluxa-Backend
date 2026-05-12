@@ -46,6 +46,7 @@ export const login = async (req, res) => {
       httpOnly: true,
       secure: isProduction,
       sameSite: isProduction ? "none" : "lax",
+      path: "/",
       maxAge: 1000 * 60 * 30, // 15mins
     });
 
@@ -53,6 +54,7 @@ export const login = async (req, res) => {
       httpOnly: true,
       secure: isProduction,
       sameSite: isProduction ? "none" : "lax",
+      path: "/",
       maxAge: 1000 * 60 * 60 * 24 * 1, // 1day
     });
 

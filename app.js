@@ -8,8 +8,8 @@ const app = express();
 
 app.use(cors({
     origin: [
-        'http://localhost:5188',
-        "https://fluxa-frontend-kappa.vercel.app"
+        "http://localhost:5188",
+        process.env.CLIENT_URL
     ],
     credentials: true,
 }));
