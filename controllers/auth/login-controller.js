@@ -3,6 +3,13 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
 export const login = async (req, res) => {
+  const isProduction = process.env.NODE_ENV === "production";
+
+  console.log(isProduction ? "production" : "dev");
+
+  console.log("NODE_ENV:", process.env.NODE_ENV);
+  console.log("isProduction:", isProduction);
+
   try {
     const { email, password } = req.body;
 
@@ -24,7 +31,7 @@ export const login = async (req, res) => {
 
     // Create an access token
     const accessToken = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "5m",
+      expiresIn: "30m",
     });
 
     // Create a refresh toke
@@ -37,16 +44,18 @@ export const login = async (req, res) => {
     // Store the tokens in http-only cookie
     res.cookie("accessToken", accessToken, {
       httpOnly: true,
-      secure: true,
-      sameSite: "Strict",
-      maxAge: 1000 * 60 * 5, // 15mins
+      secure: isProduction,
+      sameSite: isProduction ? "none" : "lax",
+      path: "/",
+      maxAge: 1000 * 60 * 30, // 30mins
     });
 
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
-      secure: true,
-      sameSite: "Strict",
-      maxAge: 100 * 60 * 60 * 24 * 1, // 1day
+      secure: isProduction,
+      sameSite: isProduction ? "none" : "lax",
+      path: "/",
+      maxAge: 1000 * 60 * 60 * 24 * 1, // 1day
     });
 
     // Send response to the user

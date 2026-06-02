@@ -12,7 +12,7 @@ export const checkAuth = async (req, res) => {
 
     if (!accessToken) {
       return res.status(401).json({
-        authenicated: false,
+        authenticated: false,
       });
     }
 
@@ -31,7 +31,7 @@ export const checkAuth = async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(401).json({
-      authenicated: false,
+      authenticated: false,
     });
   }
 };
