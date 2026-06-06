@@ -58,6 +58,10 @@ export const login = async (req, res) => {
       maxAge: 1000 * 60 * 60 * 24 * 1, // 1day
     });
 
+    console.log("Login successful for:", user.email);
+    console.log("Setting access token cookie");
+    console.log("Setting refresh token cookie");
+
     // Send response to the user
     res.status(200).json({
       message: "Login Successful",
