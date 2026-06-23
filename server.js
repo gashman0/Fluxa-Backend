@@ -8,7 +8,7 @@ dotenv.config();
 const port = process.env.PORT || 5000;
 
 connectDB();
-fetchtweets();
+// fetchtweets();
 
 app.get('/', (req, res) => {
     res.send("Your API server is running fine...")

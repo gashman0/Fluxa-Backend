@@ -7,6 +7,7 @@ import { logout } from "../controllers/auth/logout-controller.js";
 import { getMe } from "../controllers/user/me.js";
 import { checkAuth } from "../controllers/auth/check-auth.js";
 
+
 const router = express.Router();
 
 router.post("/signup", signup);
