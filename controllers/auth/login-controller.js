@@ -5,10 +5,10 @@ import jwt from "jsonwebtoken";
 export const login = async (req, res) => {
   const isProduction = process.env.NODE_ENV === "production";
 
-  console.log(isProduction ? "production" : "dev");
+  // console.log(isProduction ? "production" : "dev");
 
-  console.log("NODE_ENV:", process.env.NODE_ENV);
-  console.log("isProduction:", isProduction);
+  // console.log("NODE_ENV:", process.env.NODE_ENV);
+  // console.log("isProduction:", isProduction);
 
   try {
     const { email, password } = req.body;
@@ -58,9 +58,9 @@ export const login = async (req, res) => {
       maxAge: 1000 * 60 * 60 * 24 * 1, // 1day
     });
 
-    console.log("Login successful for:", user.email);
-    console.log("Setting access token cookie");
-    console.log("Setting refresh token cookie");
+    // console.log("Login successful for:", user.email);
+    // console.log("Setting access token cookie");
+    // console.log("Setting refresh token cookie");
 
     // Send response to the user
     res.status(200).json({

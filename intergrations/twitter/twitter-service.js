@@ -10,7 +10,7 @@ export const fetchtweets = async () => {
             }
         );
 
-        console.log(tweets.data)
+        // console.log(tweets.data)
     } catch (error) {
         console.log(error)
     }
