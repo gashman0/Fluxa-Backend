@@ -4,14 +4,14 @@ export const refresh = (req, res) => {
   const isProduction = process.env.NODE_ENV === "production";
   const refreshToken = req.cookies.refreshToken;
 
-  console.log("Refresh endpoint hit");
+  // console.log("Refresh endpoint hit");
 
   if (!refreshToken) {
     return res.status(401).json({
       message: "No refresh token",
     });
   }
-  console.log("This is the cookie from refresh", req.cookies);
+  // console.log("This is the cookie from refresh", req.cookies);
   try {
     const decoded = jwt.verify(refreshToken, process.env.REFRESH_SECRET);
 
