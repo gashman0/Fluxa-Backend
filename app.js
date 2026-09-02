@@ -32,7 +32,7 @@ app.use(cookieParser());
 
 // Swagger Documentation 
 app.get('/', (req, res, next) => {
-  if(req.hostname !== 'docs.fluxa.dev'){
+  if(req.hostname !== 'docs.fluxa.bond'){
     return next();
   }
 
@@ -41,14 +41,14 @@ app.get('/', (req, res, next) => {
 
 
 app.get('/openapi.json', (req, res) => {
-  if(req.hostname !== 'docs.fluxa.dev'){
+  if(req.hostname !== 'docs.fluxa.bond'){
     return next();
   }
   res.json(openapiSpec);
 })
 
 app.use((req, res, next) => {
-  if(req.hostname === "docs.fluxa.dev") {
+  if(req.hostname === "docs.fluxa.bond") {
     return next();
   }
 
@@ -57,7 +57,7 @@ app.use((req, res, next) => {
 
 // API
 app.get('/', (req, res, next) => {
-  if(req.hostname !== "api.fluxa.dev"){
+  if(req.hostname !== "api.fluxa.bond"){
     return next();
   }
 
