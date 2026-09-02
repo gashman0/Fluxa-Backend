@@ -40,7 +40,7 @@ app.get('/', (req, res, next) => {
 });
 
 
-app.get('/openapi.json', (req, res) => {
+app.get('/openapi.json', (req, res, next) => {
   if(req.hostname !== 'docs.fluxa.bond'){
     return next();
   }
@@ -48,7 +48,7 @@ app.get('/openapi.json', (req, res) => {
 })
 
 app.use((req, res, next) => {
-  if(req.hostname === "docs.fluxa.bond") {
+  if (req.hostname !== "docs.fluxa.bond") {
     return next();
   }
 
