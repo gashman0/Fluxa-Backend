@@ -1,0 +1,22 @@
+[nodemon] app crashed - waiting for file changes before starting...
+[nodemon] restarting due to changes...
+[nodemon] starting `node server.js`
+node:fs:440
+    return binding.readFileUtf8(path, stringToFlags(options.flag));
+                   ^
+
+Error: ENOENT: no such file or directory, open 'C:\Web Projects\Personal\Fluxa\Fluxa-Backend\docs\index.html'
+    at Object.readFileSync (node:fs:440:20)
+    at file:///C:/Web%20Projects/Personal/Fluxa/Fluxa-Backend/app.js:13:24
+    at ModuleJob.run (node:internal/modules/esm/module_job:377:25)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:671:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: 'C:\\Web Projects\\Personal\\Fluxa\\Fluxa-Backend\\docs\\index.html'
+}
+
+Node.js v24.11.1
+[nodemon] app crashed - waiting for file changes before starting...
