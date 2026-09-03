@@ -6,17 +6,17 @@ import { refresh } from "../controllers/auth/refresh-controller.js";
 import { logout } from "../controllers/auth/logout-controller.js";
 import { getMe } from "../controllers/user/me.js";
 
-import { getJobs } from "../controllers/job/jobs-controller.js";
+// import { getJobs } from "../controllers/job/jobs-controller.js";
 
 
-const router = express.Router();
+const authRouter = express.Router();
 
-router.post("/signup", signup);
-router.post("/login", login);
-router.post("/refresh", refresh);
-router.post("/logout", logout);
-router.get("/me", protect, getMe);
+authRouter.post("/signup", signup);
+authRouter.post("/login", login);
+authRouter.post("/refresh", refresh);
+authRouter.post("/logout", logout);
+authRouter.get("/me", protect, getMe);
 
-router.get("/jobs", protect, getJobs);
+// authRouter.get("/jobs", protect, getJobs);
 
-export default router;
+export default authRouter;

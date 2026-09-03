@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
-import router from "./routes/auth-routes.js";
+import authRouter from "./routes/auth-routes.js"
+import jobRouther from "./routes/jobs-router.js";
 import cookieParser from "cookie-parser";
 import openapiSpec from "./docs/openapi.js";
 import fs from 'fs';
@@ -63,6 +64,9 @@ app.get('/', (req, res, next) => {
 
   res.send("Your API server is running fine...")
 })
-app.use("/", router);
+
+
+app.use("/", authRouter);
+app.use("/", jobRouther);
 
 export default app;
