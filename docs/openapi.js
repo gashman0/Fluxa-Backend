@@ -23,6 +23,14 @@ const openapiSpec = {
       name: "Authentication",
       description: "Authentication and session management",
     },
+    {
+      name: "User",
+      description: "User account information",
+    },
+    {
+      name: "Jobs",
+      description: "Job discovery and listings",
+    },
   ],
 
   components: {
@@ -95,6 +103,7 @@ const openapiSpec = {
             type: "string",
             example: "Login Successful",
           },
+
           user: {
             type: "object",
             properties: {
@@ -108,9 +117,104 @@ const openapiSpec = {
               },
               email: {
                 type: "string",
+                format: "email",
                 example: "john@example.com",
               },
             },
+          },
+        },
+      },
+
+      User: {
+        type: "object",
+        properties: {
+          _id: {
+            type: "string",
+            example: "64f123456789abcdef123456",
+          },
+          name: {
+            type: "string",
+            example: "John Doe",
+          },
+          email: {
+            type: "string",
+            format: "email",
+            example: "john@example.com",
+          },
+          createdAt: {
+            type: "string",
+            format: "date-time",
+            example: "2026-09-03T10:30:00.000Z",
+          },
+          updatedAt: {
+            type: "string",
+            format: "date-time",
+            example: "2026-09-03T10:30:00.000Z",
+          },
+        },
+      },
+
+      Job: {
+        type: "object",
+        properties: {
+          _id: {
+            type: "string",
+            example: "64f123456789abcdef123456",
+          },
+          title: {
+            type: "string",
+            example: "Frontend Engineer",
+          },
+          company: {
+            type: "string",
+            example: "Acme Inc.",
+          },
+          description: {
+            type: "string",
+            example: "We are looking for a talented frontend engineer.",
+          },
+          location: {
+            type: "string",
+            example: "Remote",
+          },
+          url: {
+            type: "string",
+            format: "uri",
+            example: "https://example.com/jobs/frontend-engineer",
+          },
+          source: {
+            type: "string",
+            example: "greenhouse",
+          },
+          externalId: {
+            type: "string",
+            example: "123456",
+          },
+          publishedAt: {
+            type: "string",
+            format: "date-time",
+            nullable: true,
+            example: "2026-09-03T10:30:00.000Z",
+          },
+          metadata: {
+            description: "Additional metadata associated with the job.",
+            nullable: true,
+            example: {
+              location: {
+                name: "Remote",
+              },
+              company_name: "Acme Inc.",
+            },
+          },
+          createdAt: {
+            type: "string",
+            format: "date-time",
+            example: "2026-09-03T10:30:00.000Z",
+          },
+          updatedAt: {
+            type: "string",
+            format: "date-time",
+            example: "2026-09-03T10:30:00.000Z",
           },
         },
       },
@@ -123,14 +227,31 @@ const openapiSpec = {
           },
         },
       },
+
+      JobsResponse: {
+        type: "object",
+        properties: {
+          success: {
+            type: "boolean",
+            example: true,
+          },
+          count: {
+            type: "integer",
+            example: 829,
+          },
+          jobs: {
+            type: "array",
+            items: {
+              $ref: "#/components/schemas/Job",
+            },
+          },
+        },
+      },
     },
   },
 
   paths: {
-    // ========================================
     // Authentication
-    // ========================================
-
     "/signup": {
       post: {
         tags: ["Authentication"],
@@ -342,8 +463,7 @@ const openapiSpec = {
       post: {
         tags: ["Authentication"],
         summary: "Log out the current user",
-        description:
-          "Clears the access and refresh token HTTP-only cookies.",
+        description: "Clears the access and refresh token HTTP-only cookies.",
 
         responses: {
           200: {
@@ -357,6 +477,192 @@ const openapiSpec = {
 
                 example: {
                   message: "Logged out",
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+
+    // User
+    "/me": {
+      get: {
+        tags: ["User"],
+        summary: "Get the current user",
+        description: "Returns the authenticated user's account information.",
+
+        security: [
+          {
+            accessToken: [],
+          },
+        ],
+
+        responses: {
+          200: {
+            description: "Authenticated user returned successfully",
+
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/User",
+                },
+
+                example: {
+                  _id: "64f123456789abcdef123456",
+                  name: "John Doe",
+                  email: "john@example.com",
+                  createdAt: "2026-09-03T10:30:00.000Z",
+                  updatedAt: "2026-09-03T10:30:00.000Z",
+                },
+              },
+            },
+          },
+
+          401: {
+            description: "User is not authorized",
+
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/ErrorResponse",
+                },
+
+                examples: {
+                  noToken: {
+                    summary: "No access token",
+                    value: {
+                      message: "Not authorized",
+                    },
+                  },
+
+                  invalidToken: {
+                    summary: "Invalid or expired access token",
+                    value: {
+                      message: "Token expired",
+                    },
+                  },
+                },
+              },
+            },
+          },
+
+          500: {
+            description: "Internal server error",
+
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/ErrorResponse",
+                },
+
+                example: {
+                  message: "Internal server error",
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+
+    // Jobs
+    "/jobs": {
+      get: {
+        tags: ["Jobs"],
+
+        summary: "Get available jobs",
+
+        description:
+          "Returns all available jobs sorted by publication date, with the newest jobs first.",
+
+        security: [
+          {
+            accessToken: [],
+          },
+        ],
+
+        responses: {
+          200: {
+            description: "Jobs retrieved successfully",
+
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/JobsResponse",
+                },
+
+                example: {
+                  success: true,
+                  count: 2,
+                  jobs: [
+                    {
+                      _id: "64f123456789abcdef123456",
+                      title: "Frontend Engineer",
+                      company: "Acme Inc.",
+                      description:
+                        "We are looking for a talented frontend engineer.",
+                      location: "Remote",
+                      url: "https://example.com/jobs/frontend-engineer",
+                      source: "greenhouse",
+                      externalId: "123456",
+                      publishedAt: "2026-09-03T10:30:00.000Z",
+                      metadata: {
+                        location: {
+                          name: "Remote",
+                        },
+                      },
+                      createdAt: "2026-09-03T10:35:00.000Z",
+                      updatedAt: "2026-09-03T10:35:00.000Z",
+                    },
+
+                    {
+                      _id: "64f123456789abcdef123457",
+                      title: "Backend Engineer",
+                      company: "Tech Corp",
+                      description: "",
+                      location: "New York, NY",
+                      url: "https://example.com/jobs/backend-engineer",
+                      source: "greenhouse",
+                      externalId: "123457",
+                      publishedAt: "2026-09-02T15:20:00.000Z",
+                      metadata: null,
+                      createdAt: "2026-09-02T15:25:00.000Z",
+                      updatedAt: "2026-09-02T15:25:00.000Z",
+                    },
+                  ],
+                },
+              },
+            },
+          },
+
+          401: {
+            description: "User is not authorized",
+
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/ErrorResponse",
+                },
+
+                example: {
+                  message: "Not authorized",
+                },
+              },
+            },
+          },
+
+          500: {
+            description: "Internal server error while fetching jobs",
+
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/ErrorResponse",
+                },
+
+                example: {
+                  message: "Internal server error fetching jobs",
                 },
               },
             },
