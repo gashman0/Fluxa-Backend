@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import authRouter from "./routes/auth-routes.js"
 import jobRouther from "./routes/jobs-router.js";
+import adminRouter from "./routes/admin/auth-routes.js";
 import cookieParser from "cookie-parser";
 import openapiSpec from "./docs/openapi.js";
 import fs from 'fs';
@@ -68,5 +69,7 @@ app.get('/', (req, res, next) => {
 
 app.use("/", authRouter);
 app.use("/", jobRouther);
+
+app.use('/admin', adminRouter);
 
 export default app;

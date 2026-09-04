@@ -26,6 +26,6 @@ export const protect = (req, res, next) => {
     } catch (error) {
 
         console.log("JWT Verify Error:", error.message);
-        res.status(401).josn({message: "Token expired"});
+        res.status(401).json({message: "Token expired"});
     }
 }
