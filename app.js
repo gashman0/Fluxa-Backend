@@ -21,6 +21,7 @@ app.use(
   cors({
     origin: [
       "http://localhost:5188",
+      "http://localhost:5189",
       "https://fluxa.bond",
       "https://www.fluxa.bond",
       "https://docs.fluxa.bond",
