@@ -23,6 +23,31 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
+          cache: npm
 
       - name: Install Dependencies
-        run: npm install
+        run: npm ci
+
+      # Add these when your backend has these scripts
+      # - name: Run Lint
+      #   run: npm run lint
+
+      # - name: Run Tests
+      #   run: npm test
+
+      # Only deploy main to production
+      - name: Install Render CLI
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          curl -fsSL https://raw.githubusercontent.com/render-oss/cli/main/bin/install.sh | bash
+
+      - name: Deploy to Render
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        env:
+          RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
+          RENDER_SERVICE_ID: ${{ secrets.RENDER_SERVICE_ID }}
+        run: |
+          render deploys create "$RENDER_SERVICE_ID" \
+            --commit "$GITHUB_SHA" \
+            --wait \
+            --confirm
