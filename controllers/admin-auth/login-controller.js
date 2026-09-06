@@ -29,7 +29,7 @@ export const adminLogin = async(req, res) => {
 
         // Generae a 6-digit Otp
         const otp = crypto.randomInt(100000, 1000000).toString();
-        console.log("Admin OTP:", otp);
+        // console.log("Admin OTP:", otp);
 
         // Hash the OTP before storing it
         const otpHash = await bcrypt.hash(otp, 10);
