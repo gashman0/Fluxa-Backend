@@ -28,14 +28,12 @@ jobs:
       - name: Install Dependencies
         run: npm ci
 
-      # Add these when your backend has these scripts
       # - name: Run Lint
       #   run: npm run lint
 
       # - name: Run Tests
       #   run: npm test
 
-      # Only deploy main to production
       - name: Install Render CLI
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
@@ -47,6 +45,20 @@ jobs:
           RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
           RENDER_SERVICE_ID: ${{ secrets.RENDER_SERVICE_ID }}
         run: |
+          set -e
+
+          if [ -z "$RENDER_API_KEY" ]; then
+            echo "❌ RENDER_API_KEY is not set"
+            exit 1
+          fi
+
+          if [ -z "$RENDER_SERVICE_ID" ]; then
+            echo "❌ RENDER_SERVICE_ID is not set"
+            exit 1
+          fi
+
+          echo "🚀 Deploying commit $GITHUB_SHA to Render..."
+
           render deploys create "$RENDER_SERVICE_ID" \
             --commit "$GITHUB_SHA" \
             --wait \
