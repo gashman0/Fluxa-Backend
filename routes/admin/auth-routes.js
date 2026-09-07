@@ -6,6 +6,6 @@ import { verifyOtp } from "../../controllers/admin-auth/otp-controller.js";
 const adminRouter = express.Router();
 
 adminRouter.post("/login", adminLogin);
-adminRouter.post("/otp", adminRouter);
+adminRouter.post("/otp", verifyOtp);
 
 export default adminRouter;
