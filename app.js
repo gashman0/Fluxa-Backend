@@ -24,6 +24,7 @@ app.use(
       "http://localhost:5189",
       "https://fluxa.bond",
       "https://www.fluxa.bond",
+      "https://admin.fluxa.bond",
       "https://docs.fluxa.bond",
     ],
     credentials: true,

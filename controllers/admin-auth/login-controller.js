@@ -51,6 +51,7 @@ export const adminLogin = async(req, res) => {
 
         return res.status(200).json({
             message: "OTP sent successfully",
+            adminId: admin._id,
         });
 
         
