@@ -44,77 +44,78 @@ export const verifyOtp = async (req, res) => {
     const otpRecord = await otpModel.findOne({
       adminId: admin._id,
     });
+    console.log("Admin ID:", admin._id);
+    console.log("OTP record:", otpRecord);
 
-    if(!otpRecord){
-        return res.status(400).json({
-            message: "Invalid or expired OTP"
-        })
+    if (!otpRecord) {
+      console.log("❌ No OTP record found");
+      return res.status(400).json({
+        message: "Invalid or expired OTP",
+      });
     }
+    
 
+    console.log("Current time:", new Date());
+    console.log("OTP expires at:", otpRecord.expiresAt);
     // Check expiration
-    if(otpRecord.expiresAt < new Date()) {
-        await otpModel.deleteOne({
-            _id: otpRecord._id,
-        });
+    if (otpRecord.expiresAt < new Date()) {
+      console.log("OTP has expired");
+      await otpModel.deleteOne({
+        _id: otpRecord._id,
+      });
 
-        return res.status(400).json({
-            message: "Invalid or expired"
-        });
+      return res.status(400).json({
+        message: "Invalid or expired",
+      });
     }
 
     // Compare submitted OTP with stored hash
-    const isValidOtp = await bcrypt.compare(
-        otp,
-        otpRecord.otpHash,
-    );
+    const isValidOtp = await bcrypt.compare(otp, otpRecord.otpHash);
 
-    if(!isValidOtp){
-        return res.status(400).json({
-            message: "Invalid or expired OTP",
-        });
+    if (!isValidOtp) {
+      return res.status(400).json({
+        message: "Invalid or expired OTP",
+      });
     }
 
     // Create access token
-    const accessToken = jwt.sign(
-        {id: admin._id},
-        process.env.JWT_SECRET,
-        {expiresIn: "30m"}
-    );
+    const accessToken = jwt.sign({ id: admin._id }, process.env.JWT_SECRET, {
+      expiresIn: "30m",
+    });
 
     // Create refresh token
     const refrshToken = jwt.sign(
-        {id: admin._id},
-        process.env.REFRESH_SECRET,
-        {expiresIn: "1d"}
-    )
+      { id: admin._id },
+      process.env.REFRESH_SECRET,
+      { expiresIn: "1d" },
+    );
 
     // Set access token cookie
     res.cookie("accessToken", accessToken, {
-        httpOnly: true,
-        secure: isProduction,
-        sameSite: isProduction ? "none" : "lax",
-        path: "/",
-        maxAge: 1000 * 60 * 30,
+      httpOnly: true,
+      secure: isProduction,
+      sameSite: isProduction ? "none" : "lax",
+      path: "/",
+      maxAge: 1000 * 60 * 30,
     });
 
     // Set refresh token cookie
     res.cookie("refreshToken", refrshToken, {
-        httpOnly: true,
-        secure: isProduction,
-        sameSite: isProduction ? "none" : "lax",
-        path: "/",
-        maxAge: 1000 * 60 * 60 * 24,
+      httpOnly: true,
+      secure: isProduction,
+      sameSite: isProduction ? "none" : "lax",
+      path: "/",
+      maxAge: 1000 * 60 * 60 * 24,
     });
 
     return res.status(200).json({
-        message: "Login successful",
-    })
-
+      message: "Login successful",
+    });
   } catch (error) {
     console.error("OTP verification error:", error);
 
     return res.status(500).json({
-        message: "Internal server error",
+      message: "Internal server error",
     });
   }
 };
