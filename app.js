@@ -7,6 +7,7 @@ import cookieParser from "cookie-parser";
 import openapiSpec from "./docs/openapi.js";
 import fs from 'fs';
 import swaggerUiDist from 'swagger-ui-dist';
+import { protect } from "./middleware/auth.js";
 
 const app = express();
 
@@ -72,6 +73,6 @@ app.get('/', (req, res, next) => {
 app.use("/", authRouter);
 app.use("/", jobRouther);
 
-app.use('/admin', adminRouter);
+app.use('/admin', protect, adminRouter);
 
 export default app;
