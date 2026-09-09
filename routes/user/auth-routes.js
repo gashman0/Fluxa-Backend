@@ -1,9 +1,9 @@
 import express from "express";
-import { protect } from "../../middleware/auth.js";
-import { signup } from "../../controllers/auth/signup-controller.js";
-import { login } from "../../controllers/auth/login-controller.js";
-import { refresh } from "../../controllers/auth/refresh-controller.js";
-import { logout } from "../../controllers/auth/logout-controller.js";
+import { protectUser } from "../../middleware/protectUser.js";
+import { signup } from "../../controllers/user-auth/signup-controller.js";
+import { login } from "../../controllers/user-auth/login-controller.js";
+import { refresh } from "../../controllers/user-auth/refresh-controller.js";
+import { logout } from "../../controllers/user-auth/logout-controller.js";
 import { getMe } from "../../controllers/user/me.js";
 
 // import { getJobs } from "../controllers/job/jobs-controller.js";
@@ -14,7 +14,9 @@ authRouter.post("/signup", signup);
 authRouter.post("/login", login);
 authRouter.post("/refresh", refresh);
 authRouter.post("/logout", logout);
-authRouter.get("/me", protect, getMe);
+
+
+authRouter.get("/me", protectUser, getMe);
 
 // authRouter.get("/jobs", protect, getJobs);
 

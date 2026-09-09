@@ -3,7 +3,7 @@ import adminModel from "../../models/admin.model.js";
 
 export const getMeAdmin = async (req, res) => {
     try{
-        const admin = await adminModel.findById(req.user.id).select("-password");
+        const admin = await adminModel.findById(req.admin.id).select("-password");
         if(!admin){
             return res.status(404).json({
                 message: "Admin not found",

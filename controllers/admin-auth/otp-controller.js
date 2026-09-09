@@ -8,16 +8,16 @@ export const verifyOtp = async (req, res) => {
   const isProduction = process.env.NODE_ENV === "production";
 
   try {
-    const { adminId, otp } = req.body;
+    const { adminId, otp } = req.body || {};
 
-    // Validae request
+    // Validate request
     if (!adminId || !otp) {
       return res.status(400).json({
-        message: "Admin Id and OTP are required",
+        message: "Admin ID and OTP are required",
       });
     }
 
-    // Validate adminId
+    // Validate admin ID
     if (!mongoose.Types.ObjectId.isValid(adminId)) {
       return res.status(400).json({
         message: "Invalid verification request",
@@ -44,57 +44,65 @@ export const verifyOtp = async (req, res) => {
     const otpRecord = await otpModel.findOne({
       adminId: admin._id,
     });
-    console.log("Admin ID:", admin._id);
-    console.log("OTP record:", otpRecord);
 
     if (!otpRecord) {
-      console.log("❌ No OTP record found");
       return res.status(400).json({
         message: "Invalid or expired OTP",
       });
     }
 
-    console.log("Current time:", new Date());
-    console.log("OTP expires at:", otpRecord.expiresAt);
     // Check expiration
     if (otpRecord.expiresAt < new Date()) {
-      console.log("OTP has expired");
       await otpModel.deleteOne({
         _id: otpRecord._id,
       });
 
       return res.status(400).json({
-        message: "Invalid or expired",
+        message: "Invalid or expired OTP",
       });
     }
 
     // Compare submitted OTP with stored hash
-    console.log("Submitted OTP:", otp);
-    console.log("Stored OTP hash:", otpRecord.otpHash);
-
-    const isValidOtp = await bcrypt.compare(otp, otpRecord.otpHash);
-    console.log("OTP valid:", isValidOtp);
+    const isValidOtp = await bcrypt.compare(
+      otp,
+      otpRecord.otpHash,
+    );
 
     if (!isValidOtp) {
       return res.status(400).json({
-        message: "Invalid or expired OTP from hash",
+        message: "Invalid OTP",
       });
     }
 
-    // Create access token
-    const accessToken = jwt.sign({ id: admin._id }, process.env.JWT_SECRET, {
-      expiresIn: "30m",
+    // OTP is valid — consume it
+    await otpModel.deleteOne({
+      _id: otpRecord._id,
     });
 
-    // Create refresh token
-    const refrshToken = jwt.sign(
-      { id: admin._id },
-      process.env.REFRESH_SECRET,
-      { expiresIn: "1d" },
+    // Create access token
+    const accessToken = jwt.sign(
+      {
+        id: admin._id,
+      },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "30m",
+      },
     );
 
-    // Set access token cookie
-    res.cookie("accessToken", accessToken, {
+    // Create refresh token
+    const refreshToken = jwt.sign(
+      {
+        id: admin._id,
+      },
+      process.env.REFRESH_SECRET,
+      {
+        expiresIn: "1d",
+      },
+    );
+
+    // Set admin access token
+    res.cookie("adminAccessToken", accessToken, {
       httpOnly: true,
       secure: isProduction,
       sameSite: isProduction ? "none" : "lax",
@@ -102,8 +110,8 @@ export const verifyOtp = async (req, res) => {
       maxAge: 1000 * 60 * 30,
     });
 
-    // Set refresh token cookie
-    res.cookie("refreshToken", refrshToken, {
+    // Set admin refresh token
+    res.cookie("adminRefreshToken", refreshToken, {
       httpOnly: true,
       secure: isProduction,
       sameSite: isProduction ? "none" : "lax",

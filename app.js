@@ -7,7 +7,7 @@ import cookieParser from "cookie-parser";
 import openapiSpec from "./docs/openapi.js";
 import fs from "fs";
 import swaggerUiDist from "swagger-ui-dist";
-import { protect } from "./middleware/auth.js";
+import { protectUser } from "./middleware/protectUser.js";
 
 const app = express();
 
