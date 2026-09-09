@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 
 
-export const protect = (req, res, next) => {
+export const protectUser = (req, res, next) => {
 
     // console.log("Protect middleware hit");
     // console.log("Cookies:", req.cookies);
