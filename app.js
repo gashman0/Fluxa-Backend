@@ -1,12 +1,12 @@
 import express from "express";
 import cors from "cors";
-import authRouter from "./routes/auth-routes.js"
-import jobRouther from "./routes/jobs-router.js";
+import authRouter from "./routes/user/auth-routes.js";
+import jobRouther from "./routes/user/jobs-router.js";
 import adminRouter from "./routes/admin/auth-routes.js";
 import cookieParser from "cookie-parser";
 import openapiSpec from "./docs/openapi.js";
-import fs from 'fs';
-import swaggerUiDist from 'swagger-ui-dist';
+import fs from "fs";
+import swaggerUiDist from "swagger-ui-dist";
 import { protect } from "./middleware/auth.js";
 
 const app = express();
@@ -14,9 +14,9 @@ const app = express();
 const swaggerUiPath = swaggerUiDist.getAbsoluteFSPath();
 
 const swaggerHtml = fs.readFileSync(
-  new URL('./docs/index.html', import.meta.url),
-  "utf-8"
-)
+  new URL("./docs/index.html", import.meta.url),
+  "utf-8",
+);
 
 app.use(
   cors({
@@ -34,23 +34,21 @@ app.use(
 app.use(express.json());
 app.use(cookieParser());
 
-
-// Swagger Documentation 
-app.get('/', (req, res, next) => {
-  if(req.hostname !== 'docs.fluxa.bond'){
+// Swagger Documentation
+app.get("/", (req, res, next) => {
+  if (req.hostname !== "docs.fluxa.bond") {
     return next();
   }
 
-  res.type('html').send(swaggerHtml);
+  res.type("html").send(swaggerHtml);
 });
 
-
-app.get('/openapi.json', (req, res, next) => {
-  if(req.hostname !== 'docs.fluxa.bond'){
+app.get("/openapi.json", (req, res, next) => {
+  if (req.hostname !== "docs.fluxa.bond") {
     return next();
   }
   res.json(openapiSpec);
-})
+});
 
 app.use((req, res, next) => {
   if (req.hostname !== "docs.fluxa.bond") {
@@ -61,18 +59,17 @@ app.use((req, res, next) => {
 });
 
 // API
-app.get('/', (req, res, next) => {
-  if(req.hostname !== "api.fluxa.bond"){
+app.get("/", (req, res, next) => {
+  if (req.hostname !== "api.fluxa.bond") {
     return next();
   }
 
-  res.send("Your API server is running fine...")
-})
-
+  res.send("Your API server is running fine...");
+});
 
 app.use("/", authRouter);
 app.use("/", jobRouther);
 
-app.use('/admin', protect, adminRouter);
+app.use("/admin", adminRouter);
 
 export default app;
