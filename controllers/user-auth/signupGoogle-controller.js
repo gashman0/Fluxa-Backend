@@ -1,5 +1,7 @@
 import userModel from "../../models/user-model.js";
 import { OAuth2Client } from "google-auth-library";
+import { generateTokens } from "../../utils/generate-tokens.js";
+import { setAuthCookies } from "../../utils/set-auth-cookies.js";
 
 const client = new OAuth2Client(
     process.env.GOOGLE_CLIENT_ID
@@ -38,6 +40,9 @@ export const googleSignup = async (req, res) => {
                 name, email, googleId,
             });
         }
+
+        const { accessToken, refreshToken} = generateTokens(user._id);
+        setAuthCookies(res, accessToken, refreshToken);
 
         console.log("Fluxa user:", user);
 
