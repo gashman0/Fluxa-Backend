@@ -25,13 +25,7 @@ const sources = [
     provider: "greenhouse",
     identifier: "figma",
     active: true,
-  },
-  {
-    company: "Notion",
-    provider: "greenhouse",
-    identifier: "notion",
-    active: true,
-  },
+  }
 ];
 
 const run = async () => {
