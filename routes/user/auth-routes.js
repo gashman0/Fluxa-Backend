@@ -6,6 +6,8 @@ import { refresh } from "../../controllers/user-auth/refresh-controller.js";
 import { logout } from "../../controllers/user-auth/logout-controller.js";
 import { getMe } from "../../controllers/user/me.js";
 import { googleSignup } from "../../controllers/user-auth/signupGoogle-controller.js";
+import { forgotPassword } from "../../controllers/user-auth/forgot-password-controller.js";
+import { resetPassword } from "../../controllers/user-auth/reset-password-controller.js";
 
 // import { getJobs } from "../controllers/job/jobs-controller.js";
 
@@ -16,6 +18,8 @@ authRouter.post("/login", login);
 authRouter.post("/refresh", refresh);
 authRouter.post("/logout", logout);
 authRouter.post("/google", googleSignup);
+authRouter.post("/forgot-password", forgotPassword);
+authRouter.post("/reset-password", resetPassword);
 
 
 authRouter.get("/me", protectUser, getMe);
