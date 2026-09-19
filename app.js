@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import authRouter from "./routes/user/auth-routes.js";
 import jobRouther from "./routes/user/jobs-router.js";
+import paymentRouter from "./routes/user/payment-routes.js";
 import adminRouter from "./routes/admin/auth-routes.js";
 import cookieParser from "cookie-parser";
 import openapiSpec from "./docs/openapi.js";
@@ -69,6 +70,7 @@ app.get("/", (req, res, next) => {
 
 app.use("/", authRouter);
 app.use("/", jobRouther);
+app.use("/", paymentRouter);
 
 app.use("/admin", adminRouter);
 

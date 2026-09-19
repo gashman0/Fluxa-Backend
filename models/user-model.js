@@ -21,6 +21,37 @@ const userSchema = new mongoose.Schema({
     resetPasswordExpires: {
         type: Date,
         default: null,
+    },
+
+    subscription: {
+        plan: {
+            type: String,
+            enum: ["free", "pro"],
+            default: "free",
+        },
+
+        status: {
+            type: String,
+            enum: ["inactive", "active", "cancelled", "expired"],
+            default: "inactive",
+        },
+
+        provider: {
+            type: String,
+            enum: ["paystack"],
+            default: "paystack",
+        },
+
+        subscriptionCode: {
+            type: String,
+            default: null,
+        },
+
+        customerCode: {
+            type: String,
+            default: null,
+        },
+        
     }
 
 }, {timestamps: true});
