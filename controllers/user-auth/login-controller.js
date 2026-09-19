@@ -15,6 +15,7 @@ export const login = async (req, res) => {
 
     // Check if the account actually exits
     const user = await userModel.findOne({ email });
+    
     if (!user) {
       return res.status(400).json({
         message: "Invalid credentials",
