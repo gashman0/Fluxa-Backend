@@ -11,6 +11,9 @@ on:
       - main
       - dev
 
+env:
+  RENDER_CLI_VERSION: "v2.22.0"
+
 jobs:
   backend:
     runs-on: ubuntu-latest
@@ -37,7 +40,19 @@ jobs:
       - name: Install Render CLI
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
-          curl -fsSL https://raw.githubusercontent.com/render-oss/cli/main/bin/install.sh | bash
+          set -euo pipefail
+
+          version="${RENDER_CLI_VERSION#v}"
+
+          curl -sSfL \
+            "https://github.com/render-oss/cli/releases/download/${RENDER_CLI_VERSION}/cli_${version}_linux_amd64.zip" \
+            -o /tmp/render.zip
+
+          unzip -q /tmp/render.zip -d /tmp/render
+
+          sudo mv "/tmp/render/cli_${RENDER_CLI_VERSION}" /usr/local/bin/render
+
+          render --version
 
       - name: Deploy to Render
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
@@ -45,7 +60,7 @@ jobs:
           RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
           RENDER_SERVICE_ID: ${{ secrets.RENDER_SERVICE_ID }}
         run: |
-          set -e
+          set -euo pipefail
 
           if [ -z "$RENDER_API_KEY" ]; then
             echo "❌ RENDER_API_KEY is not set"
