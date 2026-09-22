@@ -1,4 +1,4 @@
-import express from "express";
+import express, { raw } from "express";
 import cors from "cors";
 import authRouter from "./routes/user/auth-routes.js";
 import jobRouther from "./routes/user/jobs-router.js";
@@ -32,7 +32,16 @@ app.use(
     credentials: true,
   }),
 );
-app.use(express.json());
+app.use(
+  express.json({
+    verify: (req, res, buf) => {
+      console.log("RAW BODY CAPTURED");
+      req.rawBody = buf;
+    },
+  }),
+);
+
+
 app.use(cookieParser());
 
 // Swagger Documentation
