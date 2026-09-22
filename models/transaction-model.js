@@ -40,9 +40,9 @@ const trasactionSchema = new mongoose.Schema(
             default: "pending",
         },
 
-        fullfillmentStatus: {
+        fulfillmentStatus: {
             type: String,
-            enum: ["pending", "completed", "failed"],
+            enum: ["pending", "fulfilled", "failed"],
             default: "pending",
         },
 

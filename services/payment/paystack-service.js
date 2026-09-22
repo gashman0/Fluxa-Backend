@@ -9,10 +9,10 @@ const paystackClient = axios.create({
 });
 
 export const initializeTransaction = async ({
-    email, amount, refrence,
+    email, amount, reference,
 }) => {
     const response = await paystackClient.post("/transaction/initialize", {
-        email, amount, refrence
+        email, amount, reference
     });
 
     return response.data;
