@@ -18,11 +18,11 @@ export const getJobs = async (req, res) => {
 
         return res.status(200).json({
             success: true,
-            count: jobs.length,
+            count: limit,
             jobs,
             pagination:{
                 page,
-                limit,
+                // limit,
                 totalJobs,
                 totalPages,
                 NextPage: page < totalPages,
