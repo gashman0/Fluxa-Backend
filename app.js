@@ -25,6 +25,7 @@ app.use(
       "http://localhost:5188",
       "http://localhost:5189",
       "https://fluxa.bond",
+      "https://dev.fluxa.bond",
       "https://www.fluxa.bond",
       "https://admin.fluxa.bond",
       "https://docs.fluxa.bond",
