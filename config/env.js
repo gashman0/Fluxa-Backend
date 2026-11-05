@@ -5,7 +5,7 @@ export const env = {
 
     port: process.env.PORT,
 
-    mongoUri: process.env.MONGO_URI,
+    mongoUri: process.env.MONG0_URI,
 
     jwtSecret: process.env.JWT_SECRET,
 

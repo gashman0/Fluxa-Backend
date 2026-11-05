@@ -3,19 +3,12 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
 export const login = async (req, res) => {
-  const isProduction = process.env.NODE_ENV === "production";
-
-  // console.log(isProduction ? "production" : "dev");
-
-  // console.log("NODE_ENV:", process.env.NODE_ENV);
-  // console.log("isProduction:", isProduction);
-
   try {
     const { email, password } = req.body;
 
     // Check if the account actually exits
     const user = await userModel.findOne({ email });
-    
+
     if (!user) {
       return res.status(400).json({
         message: "Invalid credentials",
@@ -42,26 +35,24 @@ export const login = async (req, res) => {
       { expiresIn: "1d" },
     );
 
-    // Store the tokens in http-only cookie
-    res.cookie("accessToken", accessToken, {
+    // Cookie configuration
+    const cookieOptions = {
       httpOnly: true,
-      secure: isProduction,
-      sameSite: isProduction ? "none" : "lax",
+      secure: process.env.COOKIE_SECURE === "true",
+      sameSite: process.env.COOKIE_SAME_SITE || "lax",
       path: "/",
-      maxAge: 1000 * 60 * 30, // 30mins
+    };
+
+    // Store tokens in HTTP-only cookies
+    res.cookie("accessToken", accessToken, {
+      ...cookieOptions,
+      maxAge: 1000 * 60 * 30,
     });
 
     res.cookie("refreshToken", refreshToken, {
-      httpOnly: true,
-      secure: isProduction,
-      sameSite: isProduction ? "none" : "lax",
-      path: "/",
-      maxAge: 1000 * 60 * 60 * 24 * 1, // 1day
+      ...cookieOptions,
+      maxAge: 1000 * 60 * 60 * 24,
     });
-
-    // console.log("Login successful for:", user.email);
-    // console.log("Setting access token cookie");
-    // console.log("Setting refresh token cookie");
 
     // Send response to the user
     res.status(200).json({

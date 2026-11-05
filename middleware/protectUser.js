@@ -12,7 +12,7 @@ export const protectUser = (req, res, next) => {
 
     if(!token) {
         return res.status(401).json({
-            message: "Not authorized"
+            message: "Not authorized" 
         });
     }
 
