@@ -1,25 +1,10 @@
-
+import { cookieOptions } from "../../config/cookie-config.js";
 
 export const logout = (req, res) => {
-  const isProduction = process.env.NODE_ENV === "production";
+  res.clearCookie("accessToken", cookieOptions);
+  res.clearCookie("refreshToken", cookieOptions);
 
-  
-
-  res.clearCookie("accessToken", {
-    httpOnly: true,
-    secure: isProduction,
-    sameSite: isProduction ? "none" : "lax",
-    path: "/",
-  });
-
-  res.clearCookie("refreshToken", {
-    httpOnly: true,
-    secure: isProduction,
-    sameSite: isProduction ? "none" : "lax",
-    path: "/",
-  });
-
-  res.json({
+  res.status(200).json({
     message: "Logged out",
   });
 };
