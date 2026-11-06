@@ -1,4 +1,6 @@
+
 import jwt from "jsonwebtoken";
+import { cookieOptions } from "../../config/cookie-config.js";
 
 export const refresh = (req, res) => {
   const refreshToken = req.cookies.refreshToken;
@@ -21,14 +23,6 @@ export const refresh = (req, res) => {
       { expiresIn: "30m" }
     );
 
-    // Cookie configuration
-    const cookieOptions = {
-      httpOnly: true,
-      secure: process.env.COOKIE_SECURE === "true",
-      sameSite: process.env.COOKIE_SAME_SITE || "lax",
-      path: "/",
-    };
-
     res.cookie("accessToken", newAccessToken, {
       ...cookieOptions,
       maxAge: 1000 * 60 * 30,
@@ -39,6 +33,8 @@ export const refresh = (req, res) => {
     });
 
   } catch (error) {
+    console.error("Refresh token error:", error.message);
+
     return res.status(401).json({
       message: "Invalid refresh token",
     });
