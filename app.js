@@ -8,7 +8,7 @@ import cookieParser from "cookie-parser";
 import openapiSpec from "./docs/openapi.js";
 import fs from "fs";
 import swaggerUiDist from "swagger-ui-dist";
-import { protectUser } from "./middleware/protectUser.js";
+import saveJobsRouter from "./routes/user/save-jobs-router.js";
 
 const app = express();
 
@@ -81,6 +81,7 @@ app.get("/", (req, res, next) => {
 app.use("/", authRouter);
 app.use("/", jobRouther);
 app.use("/", paymentRouter);
+app.use("/save-jobs", saveJobsRouter)
 
 app.use("/admin", adminRouter);
 
